@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AnimeMangoToon</title>
+    <link rel="stylesheet" href="src/css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .menu ul li a {
+        padding: 0.625rem 0.9375rem; /* 10px 15px */
+        color: black;
+        text-decoration: none;
+      }
+      .menu ul li a.active {
+        color: white;
+        background-color: #000;
+      }
+      .content {
+        margin: 1.25rem; /* 20px */
+        padding: 1.25rem; /* 20px */
+        background-color: #fff;
+        border-radius: 0.3125rem; /* 5px */
+        flex-grow: 1;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 1.25rem; /* 20px */
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(15.625rem, 1fr)
+        ); /* 250px */
+        grid-template-rows: auto auto;
+        gap: 1.25rem; /* 20px */
+        animation: fadeIn 1s ease-in-out;
+      }
+      .feature {
+        background-color: #e7f3fe;
+        border-radius: 0.625rem; /* 10px */
+        padding: 0.9375rem; /* 15px */
+        text-align: center;
+        transition: transform 0.5s, box-shadow 0.3s;
+        box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.2); /* 0 2px 5px */  
+        text-align: center;
+        margin-top: 20px;
+    
+      }
+      .popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+}
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+      .feature:hover {
+        transform: translateY(-0.5rem); /* -5px */
+        box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.3); /* 0 4px 10px */
+        transform: scale(1.3);
+        background-color: #000;
+
+      }
+      .feature img {
+        width: 6.25rem; /* 100px */
+        height: 6.25rem; /* 100px */
+        object-fit: cover;
+        margin-bottom: 0.625rem; /* 10px */
+        border-radius: 50%;
+      }
+      .feature h2 {
+        color: #2980b9;
+        margin-bottom: 0.625rem; /* 10px */
+      }
+      .feature p {
+        color: #555;
+      }
+
+      .team-feature {
+        background-color: #e7ffe7;
+        padding: 1.25rem; /* 20px */
+        display: flex;
+        align-items: center;
+        text-align: left;
+        border-radius: 0.625rem; /* 10px */
+        box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.2); /* 0 2px 5px */
+        grid-column: 1 / -1;
+      }
+      .team-feature img {
+        width: 9.375rem; /* 150px */
+        height: auto;
+        margin-right: 1.25rem; /* 20px */
+        border-radius: 0.625rem; /* 10px */
+      }
+
+      .contact-feature {
+        background-color: #f2e4aa;
+        padding: 1.25rem; /* 20px */
+        display: flex;
+        align-items: center;
+        text-align: left;
+        border-radius: 0.625rem; /* 10px */
+        box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.2); /* 0 2px 5px */
+        grid-column: 1 / -1;
+      }
+      .contact-feature img {
+        width: 9.375rem; /* 150px */
+        height: auto;
+        margin-right: 1.25rem; /* 20px */
+        border-radius: 0.625rem; /* 10px */
+      }
+
+      .modal {
+  display: none; /* Hidden by default */
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; 
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+        <header style="background-color: #333; padding: 10px 20px;">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="logo">
+                <a href="./index.html" target="_self">
+                  
+                </a>
+              </div>
+              <nav class="menu" style="flex-grow: 1;">
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
+                  <li style="margin: 0 15px;padding-left:130px;">
+                    <a href="./index.html" target="_self" id="home-link" onclick="changeContent('home')" style="color: white; text-decoration: none; transition: color 0.3s;">Featured</a>
+                  </li>
+                  <li style="margin: 0 15px;padding-left:130px;">
+                    <a href="features.html" id="features-link" onclick="changeContent('features')" style="color: white; text-decoration: none; transition: color 0.3s;">What to Watch</a>
+                  </li>
+                  <li style="margin: 0 15px;padding-left:130px;">
+                    <a href="team.html" id="team-link" onclick="changeContent('team')" style="color: white; text-decoration: none; transition: color 0.3s;">Latest news and reviews</a>
+                  </li>
+                </ul>
+              </nav>
+              <div class="buttons" style="display: flex;">
+                <div style="display: flex; align-items: center; margin-left: auto;"><input type="text" placeholder="Search..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;"/><button style="border: none; background: none; cursor: pointer; margin-left: 5px;" aria-label="Search"><i class="fas fa-search" style="color: white; font-size: 16px;"></i></button></div>
+
+                
+              </div>
+              <div class="menu-toggle" style="display: none; flex-direction: column; cursor: pointer;">
+                <span class="bar" style="height: 4px; width: 25px; background-color: white; margin: 3px 0;"></span>
+                <span class="bar" style="height: 4px; width: 25px; background-color: white; margin: 3px 0;"></span>
+                <span class="bar" style="height: 4px; width: 25px; background-color: white; margin: 3px 0;"></span>
+              </div>
+            </div>
+          </header>
+      
+    </header>
+
+    <div class="content" id="main-content">
+      <h1>Welcome to AnimeMangoToon</h1>
+      <div class="grid">
+        <div class="feature">
+          <img src="{{ url_for('static', filename='img1.webp') }}" alt="Anime Image" />
+          <h2>Solo Leveling</h2>
+          <p>
+            <ul>
+                <b>Writer:Chungog</b>
+                <br>
+                <b>Art:Redice Studio</b>
+                <br>
+                <b>Reads:2.5B</b>
+            </ul>
+            <button class="readMoreBtn" data-title="Solo Leveling" data-content="One of the best action fantasy manhwa and the most talked about adaptation in recent times is undoubtedly Solo Leveling. It is set in a world where humans have discovered supernatural skills, while our protagonist, Sung Jin-Woo, is a nobody with his E-Rank hunting skills. Things will take an interesting turn for him when he becomes the sole survivor of a dungeon raid. Awakened with strange new powers, Sung Jin-Woo will level up from being the weakest Hunter and eventually become the most powerful entity in the universe.">Read More</button>
+          </p>
+        </div>
+          
+       
+        <div class="feature">
+          
+          <img src="{{ url_for('static', filename='img2.webp') }}" alt="Anime Image" />
+          <h2>Tower of God</h2>
+          <ul>
+            <b>Creator:Lee Jong Hui</b>
+            <br>
+            <b>Release:2010–Present</b>
+            <br>
+            <b>Episode:197</b>
+            <br>
+            <b>Reads:1.2B</b>
+        </ul>
+        <button class="readMoreBtn" data-title="Tower of God" data-content="Even if you are not a manhwa fan, you must have heard of Tower of God. This action fantasy manhwa became especially popular after its anime adaptation. Tower of God focuses on Twenty-Fifth Bam, the young protagonist of the manhwa, who is determined to climb a mysterious Tower to find his friend Rachel. It is to be noted that the titular tower has different floors, and each floor has different obstacles. His quest is not going to be an easy one, and whether or not he will be able to meet his friend remains to be seen. Tower of God Season 2 has also been recently released.">Read More</button>
+        </div>
+        <div class="feature">
+        
+          <img src="{{ url_for('static', filename='img3.webp') }}" alt="Anime Image" />
+          <h2>Hardcore Leveling Warrior</h2>
+          <ul>
+            <b>Creator:Sehoon Kim</b>
+            <br>
+            <b>Episode:14</b>
+            <br>
+            <b>Status: Completed</b>
+            <br>
+            <b>Reads: 233.3M</b>
+        </ul>
+        <button class="readMoreBtn" data-title="HardCore Leveling Warrior" data-content="Gong Won-Ho is the top player of Lucid Adventure because he uses his alias, Hardcore Leveling Warrior, to stay on top. However, one day, the unimaginable happens – he gets defeated, and now he has to get back on the top from the bottom. The most fascinating aspect of this action fantasy manhwa is how he climbed his way to the top in the first place.">Read More</button>
+        </div>
+        <div class="feature">
+       
+          <img src="{{ url_for('static', filename='img4.webp') }}" alt="Anime Image" />
+          <h2> Noblesse</h2>
+          <ul>
+            <b>Written by:Jeho Son</b>
+            <br>
+            <b>Art by:Kwangsu Lee</b>
+            <br>
+            <b>SRelease:2007–2019</b>
+            <br>
+            <b>Reads:439.7M</b>
+        </ul>
+        <button class="readMoreBtn" data-title="Noblesse" data-content="After being in a slumber for over 800 years, Cadis Etrama Di Raizel, aka Rai, wakes up in an unfamiliar modern world. Fortunately, he meets his loyal servant Frankenstein, who is now the owner of a high school. After attending the school, Rai tries to live an ordinary life, concealing his true identity; however, that won’t happen for long. This supernatural action fantasy manhwa will keep you engaged with its beautiful illustration and unique narrative till the end. It also has its anime adaptation.">Read More</button>
+        </div>
+        <div class="feature">
+        
+          <img src="{{ url_for('static', filename='img5.webp') }}" alt="Anime Image" />
+          <h2>The God of heigh school</h2>
+          <ul>
+            <b>Creator:Yongje Park</b>
+            <br>
+            <b>Release:2014</b>
+            <br>
+            <b>Episode:34</b>
+            <br>
+            <b>Reads:786.1M</b>
+        </ul>
+        <button class="readMoreBtn" data-title="The God of High School is one of the best action fantasy manhwa that has been adapted into an anime. Jin Mori, the protagonist of the story, takes part in a suspicious tournament, the prize of which is whatever the winner wants. Like Twenty-Fifth Baam, Mori seems like an ordinary individual, but as he confronts challenges, he understands more about the three realms and his powers.">Read More</button>
+        </div>
+        <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+<!-- this is pop up box -->
+
+<div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; z-index: 1000; width: 400px;">
+  <button id="closePopup" style="position: absolute; top: 10px; right: 10px;">&times;</button>
+  <h2 id="popupTitle"></h2>
+  <p id="popupContent"></p>
+</div>
+
+        <!-- Team Section in Full Row -->
+        <div class="team-feature">
+         
+          <img src="{{ url_for('static', filename='vote1.avif') }}" alt="Anime Image" />
+
+          <div>
+            <h2>Let’s Go, Vote!</h2>
+            <p>
+                Hey fam! Which do you vibe with more—manhwa or anime? 🤔 Drop your vote and let’s see which one’s got the most love!
+            </p>
+            <button href="t.html" class="button">Vote</button>
+          </div>
+        </div>
+
+        <div class="contact-feature">
+          <img src="{{ url_for('static', filename='vpic.jpg') }}" alt="Anime Image" />
+          <div>
+              <h2>Vote here</h2>
+             
+              
+              <h3>Do you love Anime? Come on hit the upvote button</h3>
+              <div class="voting">
+                  <button class="vote-btn" onclick="vote('anime', 'up')">👍 Upvote</button>
+                  <span id="anime-vote-count">0</span>
+                  <button class="vote-btn" onclick="vote('anime', 'down')">👎 Downvote</button>
+              </div>
+              
+              <h3>Do you love manahwa ? Come on hit the upvote button</h3>
+              <div class="voting">
+                  <button class="vote-btn" onclick="vote('manhwa', 'up')">👍 Upvote</button>
+                  <span id="manhwa-vote-count">0</span>
+                  <button class="vote-btn" onclick="vote('manhwa', 'down')">👎 Downvote</button>
+              
+          </div>
+          
+      </div>
+      <button class="results-btn" onclick="showResults()">Show Results</button>
+      <!--result-->
+      <div id="resultsModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h2>Voting Results</h2>
+          <p id="resultsText">Here will be the results displayed.</p>
+        </div>
+      </div>
+  </footer>
+  <script>
+    // Get elements
+    const popup = document.getElementById('popup');
+    const closePopup = document.getElementById('closePopup');
+    const overlay = document.getElementById('overlay');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupContent = document.getElementById('popupContent');
+  
+    // Add event listener to all "Read More" buttons
+    document.querySelectorAll('.readMoreBtn').forEach(button => {
+      button.addEventListener('click', (event) => {
+        // Get title and content from data attributes of the clicked button
+        const title = event.target.getAttribute('data-title');
+        const content = event.target.getAttribute('data-content');
+  
+        // Set popup title and content
+        popupTitle.innerText = title;
+        popupContent.innerText = content;
+  
+        // Display the popup and overlay
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+    });
+  
+    // Close popup when 'X' button is clicked
+    closePopup.addEventListener('click', () => {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  
+    // Close popup when clicking outside the popup (overlay)
+    overlay.addEventListener('click', () => {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  </script>
+
+<script>
+  let animeVotes = 0; // Initialize anime vote count
+  let manhwaVotes = 0; // Initialize manhwa vote count
+  let animeVoted = false; // Flag for anime voting
+  let manhwaVoted = false; // Flag for manhwa voting
+
+  function vote(type, direction) {
+      if (type === 'anime' && !animeVoted) {
+          if (direction === 'up') {
+              animeVotes++;
+          } else if (direction === 'down') {
+              animeVotes--;
+          }
+          document.getElementById('anime-vote-count').innerText = animeVotes; // Update anime vote count display
+          animeVoted = true; // Set the flag to true to indicate a vote has been cast
+          disableVoting('anime'); // Disable voting buttons for anime
+      } else if (type === 'manhwa' && !manhwaVoted) {
+          if (direction === 'up') {
+              manhwaVotes++;
+          } else if (direction === 'down') {
+              manhwaVotes--;
+          }
+          document.getElementById('manhwa-vote-count').innerText = manhwaVotes; // Update manhwa vote count display
+          manhwaVoted = true; // Set the flag to true to indicate a vote has been cast
+          disableVoting('manhwa'); // Disable voting buttons for manhwa
+      } else {
+          alert("You can only vote once in each category!");
+      }
+  }
+
+  function disableVoting(type) {
+      if (type === 'anime') {
+          document.getElementById('anime-upvote').disabled = true;
+          document.getElementById('anime-downvote').disabled = true;
+      } else if (type === 'manhwa') {
+          document.getElementById('manhwa-upvote').disabled = true;
+          document.getElementById('manhwa-downvote').disabled = true;
+      }
+  }
+
+  function showResults() {
+      // Determine the winner based on the vote counts
+      let resultText = '';
+      if (animeVotes > manhwaVotes) {
+          resultText = `Anime is the winner with ${animeVotes} votes!`;
+      } else if (manhwaVotes > animeVotes) {
+          resultText = `Manhwa is the winner with ${manhwaVotes} votes!`;
+      } else {
+          resultText = `It's a tie! Both Anime and Manhwa have ${animeVotes} votes each!`;
+      }
+
+      // Populate the modal with the results
+      document.getElementById('resultsText').innerText = resultText;
+
+      // Display the modal
+      document.getElementById('resultsModal').style.display = 'block';
+  }
+
+  // Function to close the modal
+  function closeModal() {
+      document.getElementById('resultsModal').style.display = 'none';
+  }
+
+  // Close the modal if the user clicks anywhere outside of the modal
+  window.onclick = function(event) {
+      const modal = document.getElementById('resultsModal');
+      if (event.target == modal) {
+          closeModal();
+      }
+  }
+</script>
+
+
+</body>
+</html>
